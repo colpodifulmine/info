@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colpo di fulmine</title>
+    <link rel="stylesheet" href="style2.css">
+</head>
+<body>
+<header>
+    <img src="logo.webp" alt="Logo de Colpo di fulmine" style="height: 100px; width: auto;">
+    <h1>Benvegnû a Colpo di fulmine</h1>
+    <p>Tróa el tó amor a Bergamo.</p>
+</header>
+
+<section id="users">
+    <h2>Users</h2>
+    <div id="userList"></div>
+</section>
+
+<footer>
+    <h2>Contact</h2>
+    <p>Email: info@colpodifulmine.it</p>
+</footer>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-analytics.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBrujOGIi9YAxHdiAglO0qGvNjCfSWj2s4",
+        authDomain: "colpodifulmine-f091d.firebaseapp.com",
+        projectId: "colpodifulmine-f091d",
+        storageBucket: "colpodifulmine-f091d.appspot.com",
+        messagingSenderId: "171162551145",
+        appId: "1:171162551145:web:6850ddc0a29e759d96f3f8",
+        measurementId: "G-4HWMKPDVW2"
+
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
+
+    async function fetchUsers() {
+        const userList = document.getElementById('userList');
+        const querySnapshot = await getDocs(collection(db, "users"));
+        querySnapshot.forEach((doc) => {
+            const userDiv = document.createElement('div');
+            userDiv.className = 'user-container';
+            userDiv.innerHTML = `
+            <img src="${doc.data().photo_url || 'default-avatar.png'}" alt="${doc.data().display_name}" class="user-photo">
+            <h3>${doc.data().display_name}</h3>
+            <p>${doc.data().description}</p>
+          `;
+            userList.appendChild(userDiv);
+        });
+    }
+
+    fetchUsers();
+</script>
+</body>
+</html>
