@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="style2.css">
+</head>
+<body>
+<div class="login-container">
+    <h1>Iniciar Sesión</h1>
+    <input type="email" id="email" placeholder="Correo electrónico">
+    <input type="password" id="password" placeholder="Contraseña">
+    <button id="loginBtn">Iniciar Sesión</button>
+    <button id="googleLogin">Iniciar con Google</button>
+</div>
+
+<script type="module">
+    import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBrujOGIi9YAxHdiAglO0qGvNjCfSWj2s4",
+        authDomain: "colpodifulmine-f091d.firebaseapp.com",
+        projectId: "colpodifulmine-f091d",
+        storageBucket: "colpodifulmine-f091d.appspot.com",
+        messagingSenderId: "171162551145",
+        appId: "1:171162551145:web:6850ddc0a29e759d96f3f8",
+        measurementId: "G-4HWMKPDVW2"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            console.log('User logged in');
+            window.location.href = 'profile.html'; // Redirect to profile or another page
+        } catch (error) {
+            console.error('Failed to log in:', error);
+            alert('Error al iniciar sesión: ' + error.message);
+        }
+    });
+
+    document.getElementById('googleLogin').addEventListener('click', () => {
+        const provider = new GoogleAuthProvider();
+        signInWithPopup(auth, provider).then((result) => {
+            console.log('Google sign in success');
+            window.location.href = 'profile.html'; // Redirect to profile or another page
+        }).catch((error) => {
+            console.error('Google sign in failed:', error);
+            alert('Error al iniciar sesión con Google: ' + error.message);
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil</title>
+    <link rel="stylesheet" href="style4.css">
+</head>
+<body>
+<div class="main-container">
+    <header>
+        <h1>Editar Perfil</h1>
+    </header>
+
+    <div id="profileContainer">
+        <img id="profileImage" src="" alt="Imagen de perfil" style="width: 150px; height: 150px; border-radius: 50%;">
+        <p id="displayName">Cargando...</p>
+        <textarea id="description" placeholder="Describe yourself" rows="4"></textarea>
+        <input type="file" id="photoUpload" accept="image/*">
+        <button id="saveProfile">Guardar Perfil</button>
+        <button id="viewPostsBtn" onclick="window.location.href='post.html'">Ver Publicaciones</button>
+
+    </div>
+</div>
+
+<script type="module">
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-storage.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBrujOGIi9YAxHdiAglO0qGvNjCfSWj2s4",
+        authDomain: "colpodifulmine-f091d.firebaseapp.com",
+        projectId: "colpodifulmine-f091d",
+        storageBucket: "colpodifulmine-f091d.appspot.com",
+        messagingSenderId: "171162551145",
+        appId: "1:171162551145:web:6850ddc0a29e759d96f3f8",
+        measurementId: "G-4HWMKPDVW2"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+
+            const userRef = doc(db, "users", user.uid);
+            const userDoc = await getDoc(userRef);
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                document.getElementById('displayName').textContent = userData.display_name || 'Nombre no disponible';
+                document.getElementById('description').value = userData.description || '';
+                document.getElementById('profileImage').src = userData.photoURL || 'default-avatar.png';
+            } else {
+                console.log("No user data available");
+            }
+        } else {
+            window.location.href = 'login.html'; // Redirect to login if not logged in
+        }
+    });
+
+    document.getElementById('saveProfile').addEventListener('click', async () => {
+        const user = auth.currentUser;
+        if (!user) return;
+
+        const desc = document.getElementById('description').value;
+        const file = document.getElementById('photoUpload').files[0];
+        let photoURL = null;
+
+        if (file) {
+            const filePath = `user_photos/${user.uid}/${file.name}`;
+            const fileRef = ref(storage, filePath);
+            await uploadBytes(fileRef, file);
+            photoURL = await getDownloadURL(fileRef);
+            document.getElementById('profileImage').src = photoURL; // Update the image in real-time
+        }
+
+        await setDoc(doc(db, "users", user.uid), {
+            description: desc,
+            photoURL: photoURL || user.photoURL
+        }, { merge: true });
+
+        alert('Perfil actualizado exitosamente!');
+    });
+</script>
+</body>
+</html>
