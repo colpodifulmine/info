@@ -1,90 +1,167 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Perfil</title>
-    <link rel="stylesheet" href="style4.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Colpo di Fulmine</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
 </head>
+
+<style>
+    .container {
+        background-color: antiquewhite;
+        margin-top: 50px;
+    }
+
+    #footer1 {
+        margin-top: 50px;
+        background-color: #f8f9fa;
+        display: flex;
+        height: auto;
+        justify-content: center;
+        flex: 1;
+    }
+
+</style>
 <body>
-<div class="main-container">
-    <header>
-        <h1>Editar Perfil</h1>
-    </header>
-
-    <div id="profileContainer">
-        <img id="profileImage" src="" alt="Imagen de perfil" style="width: 150px; height: 150px; border-radius: 50%;">
-        <p id="displayName">Cargando...</p>
-        <textarea id="description" placeholder="Describe yourself" rows="4"></textarea>
-        <input type="file" id="photoUpload" accept="image/*">
-        <button id="saveProfile">Guardar Perfil</button>
-        <button id="viewPostsBtn" onclick="window.location.href='post.html'">Ver Publicaciones</button>
-
-    </div>
-</div>
+<div class="container">
+    <h1>Colpo di Fulmine - Perfil</h1>
+    <span id="usuario"></span>
+    <div class="mb-3"><a href="usuarios.html">Ver Lista de Amigos</a></div>
+            <form>
+                <div class="container mb-3" style="display: flex; flex-direction: column; flex: 1">
+                    <img  id="imagen" width="200px" height="200px" style="margin-bottom: 30px" alt="foto usuario"/>
+                    <textarea style="height: auto; overflow: hidden; width: auto" id="post"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Anexo</label>
+                    <input type="file" class="form-control" id="anexo">
+                </div>
+                <div class="mb-3">
+                <button id="botonPost" type="submit" class="btn btn-primary">Enviar</button>
+                    <button id="Salir" type="submit" class="btn btn-alert">Salir</button>
+                </div>
+                <div id="postUsers">
+                    <div id=TotalPost></div>
+                </div>
+            </form>
+        </div>
+            <footer id="footer1">
+                <p>© 2024 Colpo di Fulmine</p>
+            </footer>
 
 <script type="module">
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-storage.js";
+    import { getFirestore,doc, setDoc,getDoc,getDocs, collection} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+    import { getStorage, ref, uploadBytes,getDownloadURL  } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-storage.js";
+
 
     const firebaseConfig = {
-        apiKey: "AIzaSyBrujOGIi9YAxHdiAglO0qGvNjCfSWj2s4",
-        authDomain: "colpodifulmine-f091d.firebaseapp.com",
-        projectId: "colpodifulmine-f091d",
-        storageBucket: "colpodifulmine-f091d.appspot.com",
-        messagingSenderId: "171162551145",
-        appId: "1:171162551145:web:6850ddc0a29e759d96f3f8",
-        measurementId: "G-4HWMKPDVW2"
+        apiKey: "AIzaSyC9YBNqybKv2BSNnJSihncDRUt45QM_d-w",
+        authDomain: "pruebasfirebase-bccaf.firebaseapp.com",
+        projectId: "pruebasfirebase-bccaf",
+        storageBucket: "pruebasfirebase-bccaf.appspot.com",
+        messagingSenderId: "608685733759",
+        appId: "1:608685733759:web:d9a7b2f90077a9a5e60c4a"
     };
-
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth();
     const storage = getStorage(app);
-    const auth = getAuth(app);
-
-    onAuthStateChanged(auth, async (user) => {
+    const botonPost = document.getElementById('botonPost');
+    auth.onAuthStateChanged((user) => {
         if (user) {
+            console.log('Usuario logueado',user.uid);
+            recibirDatos(user)
+            recibirPosts();
 
-            const userRef = doc(db, "users", user.uid);
-            const userDoc = await getDoc(userRef);
-            if (userDoc.exists()) {
-                const userData = userDoc.data();
-                document.getElementById('displayName').textContent = userData.display_name || 'Nombre no disponible';
-                document.getElementById('description').value = userData.description || '';
-                document.getElementById('profileImage').src = userData.photoURL || 'default-avatar.png';
-            } else {
-                console.log("No user data available");
-            }
         } else {
-            window.location.href = 'login.html'; // Redirect to login if not logged in
+            console.log("No hay usuario logueado");
         }
     });
 
-    document.getElementById('saveProfile').addEventListener('click', async () => {
-        const user = auth.currentUser;
-        if (!user) return;
+    botonPost.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const post = document.getElementById('post').value;
+        const anexo = document.getElementById('anexo').files[0];
+        const timestamp = new Date().getTime();
+        let imageUrl = null;
 
-        const desc = document.getElementById('description').value;
-        const file = document.getElementById('photoUpload').files[0];
-        let photoURL = null;
+        try {
+            const Post = await doc(db, "posts",auth.currentUser.uid);
+            if (anexo) {
+                const storageRef = ref(storage, `fotosPost/${anexo.name}`);
+                const snapshot  = await uploadBytes(storageRef, anexo);
+                imageUrl = await getDownloadURL(snapshot.ref);
+            }
 
-        if (file) {
-            const filePath = `user_photos/${user.uid}/${file.name}`;
-            const fileRef = ref(storage, filePath);
-            await uploadBytes(fileRef, file);
-            photoURL = await getDownloadURL(fileRef);
-            document.getElementById('profileImage').src = photoURL; // Update the image in real-time
+            await setDoc(Post, {
+                post: post,
+                anexo: imageUrl,
+                usuario: auth.currentUser.uid,
+                nombreUsuario: document.getElementById('usuario').innerText,
+                fecha: new Date().toISOString()
+
+            });
+
+            console.log("Post guardado", Post.id);
+        } catch (e) {
+            console.log(e);
         }
-
-        await setDoc(doc(db, "users", user.uid), {
-            description: desc,
-            photoURL: photoURL || user.photoURL
-        }, { merge: true });
-
-        alert('Perfil actualizado exitosamente!');
     });
+
+    async function recibirPosts() {
+        const TotalPost = document.getElementById('TotalPost');
+        TotalPost.innerHTML = ''; // Clear existing posts
+
+        const postsSnapshot = await getDocs(collection(db, "posts"));
+        postsSnapshot.forEach((doc) => {
+            const data = doc.data();
+            const postElement = document.createElement('div');
+            postElement.classList.add('card', 'mb-3');
+            postElement.innerHTML = `
+                <div class="card-body">
+                    <h5 class="card-title"><strong>${data.nombreUsuario}</strong></h5>
+                    <p class="card-text">${data.post}</p>
+                    ${data.anexo ? `<img src="${data.anexo}" class="img-fluid rounded mb-3" alt="anexo"/>` : ''}
+                    <p class="card-text"><small class="text-muted">${new Date(data.fecha).toLocaleString()}</small></p>
+                </div>
+            `;
+            TotalPost.appendChild(postElement);
+        });
+    }
+
+
+
+    async function recibirDatos(user) {
+     let datos =   await getDoc((doc(db, "users", user.uid)));
+        console.log(datos.data());
+        const foto =  document.getElementById('imagen').src = datos.data().foto;
+        const nombre =  document.getElementById('usuario').innerText = datos.data().nombre;
+        try {
+            const docRef = doc(db, "users", user.uid);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const datos = docSnap.data();
+                document.getElementById('imagen').src = datos.foto;
+                document.getElementById('usuario').innerText = datos.nombre;
+            } else {
+                console.log("No such document!");
+            }
+        } catch (error) {
+            console.error("Error getting document:", error);
+        }
+    }
+
+    const botonSalir = document.getElementById('Salir').addEventListener('click', async (e) => {
+        e.preventDefault();
+        await auth.signOut();
+        window.location.href = "login.html";
+    });
+
 </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
