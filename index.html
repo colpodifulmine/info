@@ -4,50 +4,125 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Colpo di fulmine</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #faf9f6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #ffe5b4;
+            text-align: center;
+            padding: 20px;
+            border-bottom: 2px solid #ffcc80;
+        }
+        header img {
+            height: 100px;
+            width: auto;
+        }
+        header h1 {
+            color: #cc6600;
+            font-size: 2.5em;
+            margin: 0;
+        }
+        header p {
+            color: #995c00;
+            font-size: 1.2em;
+            margin: 5px 0 20px;
+        }
+        section {
+            padding: 20px;
+            background-color: #f9f9f6;
+            border-bottom: 2px solid #ffcc80;
+        }
+        section h2 {
+            color: #cc6600;
+            font-size: 2em;
+        }
+        section p, section ul, section li {
+            color: #995c00;
+            font-size: 1.1em;
+        }
+        section img {
+            max-width: 100%;
+            height: auto;
+        }
+        footer {
+            background-color: #cc6600;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+        footer a {
+            color: #ffe5b4;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.5em;
+            }
+            section {
+                padding: 10px;
+            }
+            section img {
+                width: 100%;
+                height: auto;
+            }
+        }
+    </style>
 </head>
 <body>
 <header>
-    <img src="logo.webp" alt="Logo de Colpo di fulmine" style="height: 100px; width: auto;">
+    <img src="logo.webp" alt="Logo de Colpo di fulmine">
     <h1>Benvegnû a Colpo di fulmine</h1>
-    <p>Tróa el tó amor a Bergamo.</p>
+    <p>Trova il tuo amore a Bergamo.</p>
 </header>
 
 <section id="about">
-    <h2>De</h2>
-    <p>Colpo di fulmine l’è fat per mettert’ in contat cun cèlebri in to areè.</p>
-    <img src="portada-info.jpg" alt="Cecilia Aristigueta">
-    <h3>Cecilia Aristeguieta, Fondadóra e CEO</h3>
-    <a href="login.html">consulta</a>
-    <p>Cecilia Aristeguieta, appassionada de la tecnologia e l'amor, l'ha mess su Colpo di fulmine vedènd la necessitá de 'na piataforma de incontri che capiss verament el còr e la cultura de Bergamo. Con un fondo en psicologia e tecnologia, la Cecilia la ga dedegà la so caréra a migiorà el modo in cui la gent se met in contat e crea relazion important.</p>
+    <h2>Chi siamo</h2>
+    <p>Colpo di fulmine è nato per metterti in contatto con persone speciali nella tua area.</p>
+    <img src="portada-info.jpg" alt="Cecilia Aristigueta" style="max-width: 300px;">
+    <h3>Cecilia Aristeguieta, Fondatrice e CEO</h3>
+    <p>Cecilia Aristeguieta, appassionata di tecnologia e amore, ha fondato Colpo di fulmine vedendo la necessità di una piattaforma di incontri che capisse veramente il cuore e la cultura di Bergamo. Con un background in psicologia e tecnologia, Cecilia ha dedicato la sua carriera a migliorare il modo in cui le persone si connettono e creano relazioni importanti.</p>
 </section>
 
 <section id="features">
-    <h2>Carateristich</h2>
+    <h2>Caratteristiche</h2>
     <ul>
-        <li>Chat in temp reàl</li>
-        <li>Sugerimènt personalizà</li>
-        <li>Event locàl</li>
+        <li>Chat in tempo reale</li>
+        <li>Suggerimenti personalizzati</li>
+        <li>Eventi locali</li>
     </ul>
 </section>
 
 <section id="testimonials">
-    <h2>Testimòn</h2>
-    <p>"Grassie a Colpo di fulmine ò trovà l'amor de la mia vita a Bergamo." - Luca</p>
+    <h2>Testimonianze</h2>
+    <p>"Grazie a Colpo di fulmine ho trovato l'amore della mia vita a Bergamo." - Luca</p>
 </section>
 
-<section id="signup">
-    <h2>Registràs</h2>
-    <form>
-        <input type="email" placeholder="E-mail" required>
-        <input type="password" placeholder="Contraseña" required>
-        <button type="submit">Creà acònt</button>
-    </form>
+<section id="disclaimer">
+    <h2>Clausola di esclusione di responsabilità</h2>
+    <p><strong>CEO:</strong> Cecilia Aristeguieta</p>
+    <p><strong>Sede:</strong> Bergamo, Italia</p>
+    <p>L'app di incontri "Colpo di Fulmine" è un servizio che facilita la connessione tra persone con interessi romantici e di amicizia. Tuttavia, è importante sottolineare che le informazioni fornite dagli utenti e le interazioni che avvengono all'interno dell'app sono di esclusiva responsabilità degli stessi utenti.</p>
+    <h3>Esclusione di Responsabilità:</h3>
+    <p><strong>Accuratezza delle Informazioni:</strong> "Colpo di Fulmine" non garantisce la veridicità, accuratezza, completezza o attualità delle informazioni fornite dagli utenti. I profili, i messaggi e qualsiasi altro contenuto generato dagli utenti sono di esclusiva responsabilità degli utenti che li hanno creati.</p>
+    <p><strong>Interazioni tra Utenti:</strong> "Colpo di Fulmine" non è responsabile delle interazioni tra gli utenti all'interno o all'esterno dell'app. Questo include, ma non si limita a, appuntamenti, incontri, comunicazioni e qualsiasi altra forma di interazione. Gli utenti devono agire con cautela e buon senso quando interagiscono con altri membri.</p>
+    <p><strong>Sicurezza:</strong> Sebbene ci sforziamo di fornire un ambiente sicuro, "Colpo di Fulmine" non può garantire completamente la sicurezza dei suoi utenti. Si raccomanda vivamente agli utenti di prendere misure di sicurezza adeguate e di usare il proprio giudizio quando interagiscono con altri utenti.</p>
+    <p><strong>Danni e Perdite:</strong> "Colpo di Fulmine" non sarà responsabile di alcun danno diretto, indiretto, incidentale, speciale, consequenziale o esemplare derivante dall'uso o dall'impossibilità di utilizzare l'app. Questo include, senza limitazione, danni per perdita di profitti, uso, dati o altre perdite intangibili.</p>
+    <p><strong>Modifiche al Servizio:</strong> Ci riserviamo il diritto di modificare o interrompere l'app, temporaneamente o permanentemente, con o senza preavviso. "Colpo di Fulmine" non sarà responsabile nei confronti degli utenti o di terzi per qualsiasi modifica, sospensione o interruzione del servizio.</p>
+    <p>Utilizzando "Colpo di Fulmine", accetti i termini di questa clausola di esclusione di responsabilità. Se non sei d'accordo con qualche parte di questa clausola, ti chiediamo di non utilizzare la nostra app.</p>
+    <p>Per qualsiasi domanda o commento, puoi contattarci su <a href="https://t.me/+393240920340" target="_blank">Telegram</a>.</p>
 </section>
 
 <footer>
-    <h2>Contact</h2>
-    <p>Email: info@colpodifulmine.it</p>
+    <h2>Contatto</h2>
+    <p>Contattaci su <a href="https://t.me/+393240920340" target="_blank">Telegram</a></p>
 </footer>
 </body>
 </html>
+
